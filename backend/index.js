@@ -11,7 +11,7 @@ const app = express();
 
 // Set CORS for frontend URL / allow single-node deploy
 app.use(cors({
-  origin: ['http://localhost:3000', 'mongodb://localhost:27017/', process.env.FRONTEND_URL],
+  origin: ['http://localhost:3000', 'mongodb://localhost:27017', process.env.FRONTEND_URL],
   credentials: true
 }));
 
