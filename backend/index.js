@@ -1,33 +1,27 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const  routes  = require('./routes/authRoutes')
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const path = require('path');
 
-const app = express();
 dotenv.config();
 connectDB();
-app.use(cors(
-    {
-        origin: ['http://localhost:3000',
-          'mongodb+srv://pankajkumarchauhan_shopnest_MERN:12345@cluster0.8vuvdj9.mongodb.net/shopnestdb',
-           process.env.FRONTEND_URL],
-        credentials: true
-    }
-))
+
+const app = express();
+
+// Set CORS for frontend URL / allow single-node deploy
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', process.env.FRONTEND_URL],
+  credentials: true
+}));
+
 app.use(express.json());
-app.use(express.urlencoded ({ extended: true}));
-
-
-app.get("/", (req, resp) => {
-    resp.send("ShopNest Backend is Working !");
-});
 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
-app.use('api/analytics', require('./routes/analyticsRoutes'));
+app.use('/api/analytics', require('./routes/analyticsRoutes'));
 
 // Serve frontend in production
 if (process.env.NODE_ENV === 'production') {
@@ -42,9 +36,5 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-
-const PORT = process.env.PORT || 4800
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    
-})
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
